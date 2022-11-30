@@ -12,7 +12,7 @@ extern motor Intake;
 extern motor Roller;
 extern motor Launcher1;
 extern motor Launcher2; 
-extern pneumatics Piston;
+extern digital_out Piston;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

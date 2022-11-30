@@ -25,7 +25,8 @@ using namespace vex;
 competition Competition;
 
 void pre_auton(void) {
-  vexcodeInit();
+  //Piston.set(true);
+  //vexcodeInit();
 }
 
 void autonomous(void) {
@@ -63,6 +64,10 @@ void whenControllerR2Pressed() {
 }
 void whenControllerButtonAPressed() {
   LauncherSpeed = 0;
+}
+void expansion() {
+  waitUntil(Controller1.ButtonX.pressing());
+  Piston.set(false);
 }
 /*
 void usercontrol(void) {
@@ -120,16 +125,16 @@ void usercontrol(void) {
 }
 */
 int main() {
+  vexcodeInit();
   int deadband = 5;
-  bool pistonSetState = false;  // Tracks set state of piston
-  bool waitingOnRelease = false;
+  Launcher1.setVelocity(0, rpm);
+  Launcher2.setVelocity(0, rpm);
   while (true) {
     // Get the velocity percentage of the left motor. (Axis3)
     int leftMotorSpeed = Controller1.Axis2.position();
     // Get the velocity percentage of the right motor. (Axis2)
     int rightMotorSpeed = Controller1.Axis3.position();
-    Launcher1.setVelocity(350, rpm);
-    Launcher2.setVelocity(350, rpm);
+    
     Intake.setVelocity(150, rpm);
     Roller.setVelocity(175,rpm);
     // Set the speed of the left motor. If the value is less than the deadband,
@@ -169,18 +174,25 @@ int main() {
     } else {
       Intake.stop();
     }
-    if(!Controller1.ButtonX.pressing()) {
-      Piston.set(true);
-    } else {
-      Piston.set(false);
+    if(Controller1.ButtonX.pressing()) {
+      //Piston.set(false);
+      expansion();
+    } 
+    if(Controller1.ButtonA.pressing()) {
+      Launcher1.setVelocity(350, rpm);
+      Launcher2.setVelocity(350, rpm);
+    }
+    if(Controller1.ButtonB.pressing()) {
+      Launcher1.setVelocity(0, rpm);
+      Launcher2.setVelocity(0, rpm);
     }
     // Spin both motors in the forward direction.
     FrontLeft.spin(forward);
     FrontRight.spin(forward);
     BackLeft.spin(forward);
     BackRight.spin(forward);
-    Launcher1.spin(reverse);
-    Launcher2.spin(reverse);
+    Launcher1.spin(forward);
+    Launcher2.spin(forward);
 
     wait(25, msec);
   }

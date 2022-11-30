@@ -21,35 +21,32 @@
 #include "vex.h"
 
 using namespace vex;
-/*
-competition Competition;
+
+/*competition Competition;
 
 void pre_auton(void) {
+  
   vexcodeInit();
+
 }
 
 void autonomous(void) {
   //insert code
-  FrontRight.rotateFor(directionType::rev, 720, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 720, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontRight.rotateFor(directionType::rev, 540, rotationUnits::deg, 50, velocityUnits::pct, true);
-  Intake.rotateFor(directionType::rev, 95, rotationUnits::deg, 80, velocityUnits::pct, false);
-  Intake.rotateFor(directionType::fwd, 40, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontRight.rotateFor(directionType::fwd, 720, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 720, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontLeft.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontRight.rotateFor(directionType::rev, 360, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontRight.rotateFor(directionType::fwd, 540, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 600, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontLeft.rotateFor(directionType::fwd, 100, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontRight.rotateFor(directionType::rev, 100, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontRight.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50, velocityUnits::pct, true);
+  Roller.rotateFor(directionType::rev, 80, rotationUnits::deg, 100, velocityUnits::pct, false);
 
 }
 
 int LauncherSpeed = 350;
-void whenControllerL1Pressed() {
-  Intake.spin(forward);
-  waitUntil(!Controller1.ButtonL1.pressing());
-  Intake.stop();
-}
-
-void whenControllerL2Pressed() {
-  Intake.spin(reverse);
-  waitUntil(!Controller1.ButtonL2.pressing());
-  Intake.stop();
-}
 void whenControllerR1Pressed() {
   LauncherSpeed += 50;
 }
@@ -62,15 +59,15 @@ void whenControllerButtonAPressed() {
 }
 
 void usercontrol(void) {
-   int deadband = 5;
-
+  int deadband = 5;
+  Launcher1.setVelocity(0, rpm);
+  Launcher2.setVelocity(0, rpm);
   while (true) {
     // Get the velocity percentage of the left motor. (Axis3)
     int leftMotorSpeed = Controller1.Axis2.position();
     // Get the velocity percentage of the right motor. (Axis2)
     int rightMotorSpeed = Controller1.Axis3.position();
-    Launcher1.setVelocity(350, rpm);
-    Launcher2.setVelocity(350, rpm);
+    
     Intake.setVelocity(150, rpm);
     Roller.setVelocity(175,rpm);
     // Set the speed of the left motor. If the value is less than the deadband,
@@ -110,7 +107,19 @@ void usercontrol(void) {
     } else {
       Intake.stop();
     }
-    
+    if(!Controller1.ButtonX.pressing()) {
+      Piston.set(true);
+    } else {
+      Piston.set(false);
+    }
+    if(Controller1.ButtonA.pressing()) {
+      Launcher1.setVelocity(350, rpm);
+      Launcher2.setVelocity(350, rpm);
+    }
+    if(Controller1.ButtonB.pressing()) {
+      Launcher1.setVelocity(0, rpm);
+      Launcher2.setVelocity(0, rpm);
+    }
     // Spin both motors in the forward direction.
     FrontLeft.spin(forward);
     FrontRight.spin(forward);
@@ -121,19 +130,37 @@ void usercontrol(void) {
 
     wait(25, msec);
   }
-}*/
-int main() {
-  vexcodeInit();
-  FrontRight.rotateFor(directionType::rev, 720, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 720, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontLeft.rotateFor(directionType::rev, 180, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontRight.rotateFor(directionType::fwd, 360, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontRight.rotateFor(directionType::rev, 540, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 600, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontLeft.rotateFor(directionType::rev, 100, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontRight.rotateFor(directionType::fwd, 100, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontRight.rotateFor(directionType::rev, 180, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 180, rotationUnits::deg, 50, velocityUnits::pct, true);
-  Roller.rotateFor(directionType::rev, 80, rotationUnits::deg, 100, velocityUnits::pct, false);
+}
+*/int main() {
+  /*Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
 
+  pre_auton();
+
+  while(true) {
+    wait(100, msec);
+  }*/
+  vexcodeInit();
+  FrontRight.rotateFor(directionType::fwd, 720, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 720, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontLeft.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontRight.rotateFor(directionType::rev, 360, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontRight.rotateFor(directionType::fwd, 540, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 600, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontLeft.rotateFor(directionType::fwd, 100, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontRight.rotateFor(directionType::rev, 100, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontRight.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50, velocityUnits::pct, true);
+  Roller.rotateFor(directionType::rev, 80, rotationUnits::deg, 100, velocityUnits::pct, false);
+  Intake.setVelocity(100, pct);
+  Launcher1.setVelocity(365, rpm);
+  Launcher2.setVelocity(365,rpm);
+  Launcher1.spin(forward);
+  Launcher2.spin(forward);
+  wait(3.5, seconds);
+  Intake.spin(forward);
+  wait(1.5, seconds);
+  Intake.stop();
+  Launcher1.stop();
+  Launcher2.stop();
 }
