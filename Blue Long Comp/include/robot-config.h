@@ -6,10 +6,13 @@ extern brain Brain;
 extern controller Controller1;
 extern motor FrontLeft;
 extern motor FrontRight;
-extern motor LowerIntake;
-extern motor UpperIntake;
+extern motor BackLeft;
+extern motor BackRight;
+extern motor Intake;
+extern motor Roller;
 extern motor Launcher1;
-extern motor Launcher2;
+extern motor Launcher2; 
+extern digital_out Piston;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

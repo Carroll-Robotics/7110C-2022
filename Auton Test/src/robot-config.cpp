@@ -9,15 +9,16 @@ brain Brain;
 
 // VEXcode device constructors
 controller Controller1 = controller(primary);
-motor FrontRight = motor(PORT15, ratio18_1, true);
-motor FrontLeft = motor(PORT20, ratio18_1, false);
-motor BackRight = motor(PORT2, ratio18_1, true);
-motor BackLeft = motor(PORT6, ratio18_1, false);
+motor FrontRight = motor(PORT15, ratio18_1, false);
+motor FrontLeft = motor(PORT20, ratio18_1, true);
+motor BackRight = motor(PORT2, ratio18_1, false);
+motor BackLeft = motor(PORT6, ratio18_1, true);
 motor Intake = motor(PORT3, ratio18_1, false);
 motor Roller = motor(PORT8, ratio18_1, false);
 motor Launcher1 = motor(PORT11, ratio6_1, false);
 motor Launcher2 = motor(PORT12, ratio6_1, false);
 digital_out Piston = digital_out(Brain.ThreeWirePort.A);
+
 
 // VEXcode generated functions
 
@@ -28,4 +29,5 @@ digital_out Piston = digital_out(Brain.ThreeWirePort.A);
  */
 void vexcodeInit(void) {
   // nothing to initialize
+  //Piston.set(true);
 }
