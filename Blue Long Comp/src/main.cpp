@@ -25,39 +25,33 @@ using namespace vex;
 competition Competition;
 
 void pre_auton(void) {
+  
   vexcodeInit();
+
 }
 
 void autonomous(void) {
-  FrontRight.rotateFor(directionType::rev, 720, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 720, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontLeft.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontRight.rotateFor(directionType::rev, 360, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontRight.rotateFor(directionType::rev, 540, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 600, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontLeft.rotateFor(directionType::fwd, 100, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontRight.rotateFor(directionType::rev, 100, rotationUnits::deg, 50, velocityUnits::pct, true);
-  FrontRight.rotateFor(directionType::rev, 240, rotationUnits::deg, 50, velocityUnits::pct, false);
-  BackRight.rotateFor(directionType::rev, 240, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 180, rotationUnits::deg, 50, velocityUnits::pct, true);
+  //insert code
+  /*FrontRight.rotateFor(directionType::fwd, 380, rotationUnits::deg, 50*.6, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 380, rotationUnits::deg, 50*.6, velocityUnits::pct, true);
+  wait(0.5, sec);
+  FrontRight.rotateFor(directionType::fwd, 360, rotationUnits::deg, 50*.6, velocityUnits::pct, true);
+  FrontLeft.rotateFor(directionType::rev, 360, rotationUnits::deg, 50*.6, velocityUnits::pct, false);
+  wait(0.5, sec);
+  
+  //FrontRight.rotateFor(directionType::fwd, 540, rotationUnits::deg, 50*.6, velocityUnits::pct, false);
+  //FrontLeft.rotateFor(directionType::fwd, 600, rotationUnits::deg, 50*.6, velocityUnits::pct, true);
+  //FrontLeft.rotateFor(directionType::fwd, 140, rotationUnits::deg, 50*.6, velocityUnits::pct, true);
+  //FrontRight.rotateFor(directionType::rev, 140, rotationUnits::deg, 50*.6, velocityUnits::pct, false);
+  //wait(0.5, sec);
+  FrontRight.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50*.6, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 180, rotationUnits::deg, 50*.6, velocityUnits::pct, true);
+  wait(0.5, sec);
   Roller.rotateFor(directionType::rev, 80, rotationUnits::deg, 100, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::fwd, 100, rotationUnits::deg, false);
-  BackLeft.rotateFor(directionType::fwd, 100, rotationUnits::deg, true);
-  Intake.setVelocity(200, rpm);
-  Launcher1.setVelocity(370, rpm);
-  Launcher2.setVelocity(370,rpm);
-  Launcher1.spin(forward);
-  Launcher2.spin(forward);
-  wait(3.5, seconds);
-  Intake.spin(forward);
-  wait(1.5, seconds);
-  Intake.stop();
-  Launcher1.stop();
-  Launcher2.stop();
+  */
 }
 
 int LauncherSpeed = 350;
-
 void whenControllerR1Pressed() {
   LauncherSpeed += 50;
 }
@@ -68,13 +62,16 @@ void whenControllerR2Pressed() {
 void whenControllerButtonAPressed() {
   LauncherSpeed = 0;
 }
-
+void krishistrashatcoding() {
+  waitUntil(Controller1.ButtonLeft.pressing() && Controller1.ButtonRight.pressing());
+  Piston.set(true);
+}
 void usercontrol(void) {
-
   int deadband = 5;
   Launcher1.setVelocity(0, rpm);
   Launcher2.setVelocity(0, rpm);
-  //Controller1.ButtonX.pressed(krishistrashatcoding);
+  Controller1.ButtonX.pressed(krishistrashatcoding);
+
   while (true) {
     // Get the velocity percentage of the left motor. (Axis3)
     int leftMotorSpeed = Controller1.Axis2.position();
@@ -120,13 +117,14 @@ void usercontrol(void) {
     } else {
       Intake.stop();
     }
-    /*if(Controller1.ButtonX.pressing()) {
-      //Piston.set(false);
-      expansion();
-    }*/ 
+    /*if(!Controller1.ButtonX.pressing()) {
+      Piston.set(true);
+    } else {
+      Piston.set(false);
+    }*/
     if(Controller1.ButtonA.pressing()) {
-      Launcher1.setVelocity(350, rpm);
-      Launcher2.setVelocity(350, rpm);
+      Launcher1.setVelocity(275, rpm);
+      Launcher2.setVelocity(275, rpm);
     }
     if(Controller1.ButtonB.pressing()) {
       Launcher1.setVelocity(0, rpm);

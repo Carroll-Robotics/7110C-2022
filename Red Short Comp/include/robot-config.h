@@ -11,7 +11,8 @@ extern motor BackRight;
 extern motor Intake;
 extern motor Roller;
 extern motor Launcher1;
-extern motor Launcher2;
+extern motor Launcher2; 
+extern digital_out Piston;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

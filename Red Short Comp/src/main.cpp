@@ -25,14 +25,18 @@ using namespace vex;
 competition Competition;
 
 void pre_auton(void) {
+  Piston.set(true);
   vexcodeInit();
 }
 
 void autonomous(void) {
   //insert code
-  FrontRight.rotateFor(directionType::rev, 200, rotationUnits::deg, 50, velocityUnits::pct, false);
-  FrontLeft.rotateFor(directionType::rev, 200, rotationUnits::deg, 50, velocityUnits::pct, true);
+  FrontRight.rotateFor(directionType::fwd, 150, rotationUnits::deg, 50, velocityUnits::pct, false);
+  FrontLeft.rotateFor(directionType::fwd, 150, rotationUnits::deg, 50, velocityUnits::pct, false);
+  wait(1, sec);
   Roller.rotateFor(directionType::rev, 90, rotationUnits::deg);
+
+
 
 }
 int LauncherSpeed = 350;
@@ -60,15 +64,18 @@ void whenControllerButtonAPressed() {
 }
 
 void usercontrol(void) {
-   int deadband = 5;
-
+  Piston.set(true);
+  int deadband = 5;
+  //bool pistonSetState = false;  // Tracks set state of piston
+  //bool waitingOnRelease = false;
+  Launcher1.setVelocity(0, rpm);
+  Launcher2.setVelocity(0, rpm);
   while (true) {
     // Get the velocity percentage of the left motor. (Axis3)
     int leftMotorSpeed = Controller1.Axis2.position();
     // Get the velocity percentage of the right motor. (Axis2)
     int rightMotorSpeed = Controller1.Axis3.position();
-    Launcher1.setVelocity(350, rpm);
-    Launcher2.setVelocity(350, rpm);
+    
     Intake.setVelocity(150, rpm);
     Roller.setVelocity(175,rpm);
     // Set the speed of the left motor. If the value is less than the deadband,
@@ -108,14 +115,26 @@ void usercontrol(void) {
     } else {
       Intake.stop();
     }
-    
+    if(!Controller1.ButtonX.pressing()) {
+      Piston.set(true);
+    } else {
+      Piston.set(false);
+    }
+    if(Controller1.ButtonA.pressing()) {
+      Launcher1.setVelocity(300, rpm);
+      Launcher2.setVelocity(300, rpm);
+    }
+    if(Controller1.ButtonB.pressing()) {
+      Launcher1.setVelocity(0, rpm);
+      Launcher2.setVelocity(0, rpm);
+    }
     // Spin both motors in the forward direction.
     FrontLeft.spin(forward);
     FrontRight.spin(forward);
     BackLeft.spin(forward);
     BackRight.spin(forward);
-    //Launcher1.spin(reverse);
-    //Launcher2.spin(reverse);
+    Launcher1.spin(forward);
+    Launcher2.spin(forward);
 
     wait(25, msec);
   }

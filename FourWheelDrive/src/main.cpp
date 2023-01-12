@@ -65,13 +65,9 @@ void whenControllerR2Pressed() {
 void whenControllerButtonAPressed() {
   LauncherSpeed = 0;
 }
-
-void krishistrashatcoding() {
-  Piston.set(false);
-}
 void expansion() {
   waitUntil(Controller1.ButtonX.pressing());
-  Piston.set(true);
+  Piston.set(false);
 }
 /*
 void usercontrol(void) {
@@ -129,12 +125,10 @@ void usercontrol(void) {
 }
 */
 int main() {
-  Piston.set(true);
   vexcodeInit();
   int deadband = 5;
   Launcher1.setVelocity(0, rpm);
   Launcher2.setVelocity(0, rpm);
-  Controller1.ButtonX.pressed(krishistrashatcoding);
   while (true) {
     // Get the velocity percentage of the left motor. (Axis3)
     int leftMotorSpeed = Controller1.Axis2.position();
@@ -180,13 +174,13 @@ int main() {
     } else {
       Intake.stop();
     }
-    /*if(Controller1.ButtonX.pressing()) {
+    if(Controller1.ButtonX.pressing()) {
       //Piston.set(false);
       expansion();
-    }*/ 
+    } 
     if(Controller1.ButtonA.pressing()) {
-      Launcher1.setVelocity(350, rpm);
-      Launcher2.setVelocity(350, rpm);
+      Launcher1.setVelocity(250, rpm);
+      Launcher2.setVelocity(250, rpm);
     }
     if(Controller1.ButtonB.pressing()) {
       Launcher1.setVelocity(0, rpm);
