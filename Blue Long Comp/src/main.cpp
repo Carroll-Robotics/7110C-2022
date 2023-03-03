@@ -141,6 +141,8 @@ void autonomous(void) {
   spinUpAuton(450);
   waitUntil(fireReady);
   shoot();
+  Launcher1.stop();
+  Launcher2.stop();
 }
 
 
