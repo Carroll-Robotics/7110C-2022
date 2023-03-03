@@ -139,6 +139,8 @@ void autonomous(void) {
   spinUpAuton(450);
   waitUntil(fireReady);
   shoot();
+  Launcher1.stop();
+  Launcher2.stop();
   driveTurn(-120 + 3.366);
   Intake_Roller.spin(forward);
   simpleDrive(forward,36,true);
@@ -152,6 +154,8 @@ void autonomous(void) {
   spinUpAuton(400);
   waitUntil(fireReady);
   shoot();
+  Launcher1.stop();
+  Launcher2.stop();
 }
 
 
