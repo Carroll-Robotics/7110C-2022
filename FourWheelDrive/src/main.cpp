@@ -39,13 +39,42 @@ void autonomous(void) {
 
 }
 
-int LauncherSpeed = 350;
 void whenControllerL1Pressed() {
   Roller.spin(forward);
   Intake.spin(forward);
   waitUntil(!Controller1.ButtonL1.pressing());
   Roller.stop();
   Intake.stop();
+}
+void spinUp(float speed) {
+  wait(0.15,sec);
+  if(Launcher1.velocity(rpm)==0) return;
+  float eRec = 0;
+  float dRec = 0;
+  float ddRec = 0;
+  float e = speed - Launcher1.velocity(rpm);
+  float d = e-eRec;
+  float dd = d-dRec;
+  float ddd = dd-ddRec;
+  float kp = 0.85;
+  float kd = 0.25;
+  float kdd = 0.15;
+  float kddd = 0.05;
+  eRec=e;
+  dRec=d;
+  ddRec=dd;
+
+  while(kp*e + kd*d + kdd*dd + kddd*ddd > 20) {
+    e = speed - Launcher1.velocity(rpm);
+    d = e-eRec;
+    dd = d-dRec;
+    ddd = dd-ddRec;
+    eRec=e;
+    dRec=d;
+    ddRec=dd;
+    wait(25,msec);
+  }
+  Controller1.rumble("-");
 }
 
 void whenControllerL2Pressed() {
@@ -56,18 +85,18 @@ void whenControllerL2Pressed() {
   Intake.stop();
 }
 void whenControllerR1Pressed() {
-  LauncherSpeed += 50;
+//  LauncherSpeed += 50;
 }
 
 void whenControllerR2Pressed() {
-  LauncherSpeed -= 50;
+//  LauncherSpeed -= 50;
 }
 void whenControllerButtonAPressed() {
-  LauncherSpeed = 0;
+//  LauncherSpeed = 0;
 }
 void expansion() {
-  waitUntil(Controller1.ButtonX.pressing());
-  Piston.set(false);
+  waitUntil(Controller1.ButtonR1.pressing() && Controller1.ButtonR2.pressing());
+  Expansion.set(true);
 }
 /*
 void usercontrol(void) {
@@ -127,15 +156,34 @@ void usercontrol(void) {
 int main() {
   vexcodeInit();
   int deadband = 5;
+  bool intakeMode = true;
+  float driveLimit = 0.8;
   Launcher1.setVelocity(0, rpm);
   Launcher2.setVelocity(0, rpm);
+  Controller1.ButtonX.pressed(expansion);
+  Indexer.set(false);
+  bool wasPressing = false;
+  float ke = 0.35;
+  float kd = 0.65;
+  float ki = 0.0;
+  int eRec = 0;
+  int e = 0;
+  int d = 0;
+  int i = 0;
+  int launcherSpeed = 325;
   while (true) {
     // Get the velocity percentage of the left motor. (Axis3)
-    int leftMotorSpeed = Controller1.Axis2.position();
+    int leftMotorSpeed = intakeMode ? Controller1.Axis3.position() : (-1*Controller1.Axis2.position());
     // Get the velocity percentage of the right motor. (Axis2)
-    int rightMotorSpeed = Controller1.Axis3.position();
-    
-    Intake.setVelocity(150, rpm);
+    int rightMotorSpeed = intakeMode ? Controller1.Axis2.position() : (-1*Controller1.Axis3.position());
+    /*if(Launcher1.velocity(rpm)!=0) {
+      e = Launcher1.velocity(rpm)-350;
+      d = e-eRec;
+      i+=e;
+      eRec=e;
+      launcherSpeed = 350 - 150*(ki*i + ke*e + kd*d);
+    }*/
+    Intake.setVelocity(200, rpm);
     Roller.setVelocity(175,rpm);
     // Set the speed of the left motor. If the value is less than the deadband,
     // set it to zero.
@@ -145,8 +193,13 @@ int main() {
       BackLeft.setVelocity(0, percent);
     } else {
       // Set the speed to leftMotorSpeed
-      FrontLeft.setVelocity(leftMotorSpeed, percent);
-      BackLeft.setVelocity(leftMotorSpeed, percent);
+      FrontLeft.setVelocity(driveLimit * leftMotorSpeed, percent);
+      BackLeft.setVelocity(driveLimit * leftMotorSpeed, percent);
+    }
+    if (Controller1.ButtonUp.pressing()) {
+      intakeMode = true;
+    } else if (Controller1.ButtonDown.pressing()) {
+      intakeMode = false;
     }
 
     // Set the speed of the right motor. If the value is less than the deadband,
@@ -157,15 +210,8 @@ int main() {
       BackRight.setVelocity(0, percent);
     } else {
       // Set the speed to rightMotorSpeed
-      FrontRight.setVelocity(rightMotorSpeed, percent);
-      BackRight.setVelocity(rightMotorSpeed, percent);
-    }
-    if (Controller1.ButtonR1.pressing()) {
-      Roller.spin(forward);
-    } else if (Controller1.ButtonR2.pressing()) {
-      Roller.spin(reverse);
-    } else {
-      Roller.stop();
+      FrontRight.setVelocity(driveLimit * rightMotorSpeed, percent);
+      BackRight.setVelocity(driveLimit * rightMotorSpeed, percent);
     }
     if (Controller1.ButtonL1.pressing()) {
       Intake.spin(forward);
@@ -174,17 +220,26 @@ int main() {
     } else {
       Intake.stop();
     }
-    if(Controller1.ButtonX.pressing()) {
+    if(Controller1.ButtonY.pressing() && !wasPressing) {
+      Indexer.set(true);
+      wait(50,msec);
+      Indexer.set(false);
+      spinUp(launcherSpeed);
+    }
+    wasPressing = (Controller1.ButtonY.pressing());
+    /*if(Controller1.ButtonX.pressing()) {
       //Piston.set(false);
       expansion();
-    } 
+    }*/ 
     if(Controller1.ButtonA.pressing()) {
-      Launcher1.setVelocity(250, rpm);
-      Launcher2.setVelocity(250, rpm);
+      Launcher1.setVelocity(launcherSpeed, rpm);
+      Launcher2.setVelocity(launcherSpeed, rpm);
+      spinUp(launcherSpeed);
     }
     if(Controller1.ButtonB.pressing()) {
       Launcher1.setVelocity(0, rpm);
       Launcher2.setVelocity(0, rpm);
+      //launcherSpeed=350;
     }
     // Spin both motors in the forward direction.
     FrontLeft.spin(forward);
@@ -193,6 +248,8 @@ int main() {
     BackRight.spin(forward);
     Launcher1.spin(forward);
     Launcher2.spin(forward);
+    Controller1.Screen.print(Launcher1.velocity(rpm) - 350);
+    Controller1.Screen.newLine();
 
     wait(25, msec);
   }
